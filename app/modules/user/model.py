@@ -1,4 +1,4 @@
-from sqlalchemy import String, Boolean, DateTime, func, ForeignKey
+from sqlalchemy import String, Boolean, DateTime, func, ForeignKey, UniqueConstraint, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 from typing import TYPE_CHECKING
@@ -10,8 +10,7 @@ class User(Base):
     
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(100), index=True, nullable=False)
-    email: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
-    hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
+    email: Mapped[str] = mapped_column(String(255), index=True, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(),nullable=False)
@@ -19,7 +18,24 @@ class User(Base):
     
     roles: Mapped[list["Role"]] = relationship(secondary="user_roles", back_populates="users", lazy="selectin", overlaps="user_roles")
     user_roles: Mapped[list["UserRole"]] = relationship(back_populates="user", cascade="all, delete-orphan", overlaps="roles,users")
-    refresh_tokens = relationship("RefreshToken", back_populates="user", cascade="all, delete-orphan")
+    auth_identities: Mapped[list["AuthIdentity"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+
+
+class AuthIdentity(Base):
+    __tablename__ = "auth_identities"
+    
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    provider: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
+    provider_uid: Mapped[str] = mapped_column(String(255), nullable=False)
+    provider_email: Mapped[str | None] = mapped_column(String(255))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    
+    __table_args__ = (
+        UniqueConstraint("provider", "provider_uid", name="uq_provider_uid"),
+    )
+    
+    user: Mapped["User"] = relationship(back_populates="auth_identities")
 
 
 class Role(Base):
