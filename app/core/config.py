@@ -11,10 +11,11 @@ class Settings(BaseSettings):
     database_url: str = Field(..., alias="DATABASE_URL")
     database_url_async : str = Field(..., alias="DATABASE_URL_ASYNC")
     
-    #tokens
-    SECRET_KEY: str
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
-    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+    #auth
+    FIREBASE_PROJECT_ID: str
+    FIREBASE_PRIVATE_KEY: str
+    FIREBASE_CLIENT_EMAIL: str
+    FIREBASE_TOKEN_URL: str
     
     model_config = SettingsConfigDict(
         env_file = ".env",

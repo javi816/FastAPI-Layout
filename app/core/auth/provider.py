@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 
+@dataclass
 class AuthUser:
     def __init__(self, uid: str, email: str | None, name: str | None = None):
         self.uid = uid
@@ -8,5 +10,5 @@ class AuthUser:
 
 class AuthProvider(ABC):
     @abstractmethod
-    def verify_token(self, token: str) -> AuthUser:
+    async def verify_token(self, token: str) -> AuthUser:
         pass
