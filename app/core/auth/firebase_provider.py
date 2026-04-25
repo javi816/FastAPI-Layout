@@ -11,5 +11,5 @@ class FireBaseProvider(AuthProvider):
         return AuthUser(
             uid=decoded["uid"],
             email=decoded.get("email"),
-            name=decoded.get("name")
+            provider=decoded.get("firebase", {}).get("sign_in_provider")
         )

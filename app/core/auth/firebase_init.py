@@ -5,11 +5,5 @@ from app.core.config import settings
 
 def init_firebase() -> None:
     if not firebase_admin._apps:
-        cred = credentials.Certificate({
-            "type": "service_account",
-            "proyect_id": settings.FIREBASE_PROJECT_ID,
-            "private_key": settings.FIREBASE_PRIVATE_KEY,
-            "client_email": settings.FIREBASE_CLIENT_EMAIL,
-            "token_url": settings.FIREBASE_TOKEN_URL,
-        })
+        cred = credentials.Certificate(settings.FIREBASE_CREDENTIALS_PATH)
         firebase_admin.initialize_app(cred)

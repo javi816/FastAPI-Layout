@@ -12,3 +12,6 @@ wheels/
 
 # Enviroment variables
 .env
+
+#firebase Admin Secret
+app/firebase/serviceAccount.json

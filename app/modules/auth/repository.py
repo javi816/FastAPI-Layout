@@ -3,7 +3,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 from .model import AuthIdentity
-from modules.user.model import User
+from app.modules.user.model import User
 
 class AuthIdentityRepository:
     def __init__(self, db: AsyncSession):
@@ -12,8 +12,8 @@ class AuthIdentityRepository:
     async def get_user_by_provider_uid(self, provider: str, provider_uid: str) -> User | None:
         stmt = (
             select(User)
-            .options(selectinload(User.roles))
             .join(AuthIdentity, AuthIdentity.user_id == User.id)
+            .options(selectinload(User.roles))
             .where(
                 AuthIdentity.provider == provider,
                 AuthIdentity.provider_uid == provider_uid,
