@@ -15,3 +15,7 @@ wheels/
 
 #firebase Admin Secret
 app/firebase/serviceAccount.json
+
+# Local scripts
+decode_token.py
+AGENTS.md

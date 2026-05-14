@@ -23,3 +23,7 @@ class AuthIdentityRepository:
         )
         result = await self.db.execute(stmt)
         return result.scalar_one_or_none()
+
+    async def save_identity(self, identity: AuthIdentity) -> AuthIdentity:
+        self.db.add(identity)
+        return identity
