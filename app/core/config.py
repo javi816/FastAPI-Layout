@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     
     #auth
     FIREBASE_CREDENTIALS_PATH: str
+    BOOTSTRAP_ADMIN_EMAILS: str = ""
     
     model_config = SettingsConfigDict(
         env_file = ".env",

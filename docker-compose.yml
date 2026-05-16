@@ -14,5 +14,20 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  fastapi:
+    build: .
+    container_name: fastapi_dev
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://app_user:app_password@postgres:5432/app_db
+      - DATABASE_URL_ASYNC=postgresql+asyncpg://app_user:app_password@postgres:5432/app_db
+      - FIREBASE_CREDENTIALS_PATH=/app/firebase/serviceAccount.json
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
+
 volumes:
   postgres_data:

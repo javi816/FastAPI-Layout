@@ -72,6 +72,15 @@ class RoleRepository:
             
         result = await self.db.execute(stmt)
         return result.scalars().one_or_none()
+
+    async def get_by_name(self, role_name: str, include_deleted: bool = False) -> Role | None:
+        stmt = select(Role).where(Role.name == role_name)
+
+        if not include_deleted:
+            stmt = stmt.where(Role.deleted_at.is_(None))
+
+        result = await self.db.execute(stmt)
+        return result.scalars().one_or_none()
     
     async def list_roles(self, *, limit: int, offset: int, include_deleted: bool = False) -> list[Role]:
         

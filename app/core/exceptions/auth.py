@@ -24,11 +24,41 @@ class UserNotActive(AuthenticationError):
         )
 
 class UserNotFound(AuthenticationError):
-    
+
     def __init__(self):
         super().__init__(
             message="Usuario no encontrado",
             code="user_not_found",
             status_code=404
+        )
+
+
+class InvalidAuthorizationHeader(AuthenticationError):
+
+    def __init__(self):
+        super().__init__(
+            message="Invalid authorization header",
+            code="invalid_authorization_header",
+            status_code=401
+        )
+
+
+class InvalidOrExpiredToken(AuthenticationError):
+
+    def __init__(self):
+        super().__init__(
+            message="Invalid or expired token",
+            code="invalid_or_expired_token",
+            status_code=401
+        )
+
+
+class UserNotRegistered(AuthenticationError):
+
+    def __init__(self):
+        super().__init__(
+            message="User not registered in system",
+            code="user_not_registered",
+            status_code=401
         )
 

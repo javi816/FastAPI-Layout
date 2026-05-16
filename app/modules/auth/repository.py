@@ -27,3 +27,20 @@ class AuthIdentityRepository:
     async def save_identity(self, identity: AuthIdentity) -> AuthIdentity:
         self.db.add(identity)
         return identity
+
+    async def get_identity_by_provider_uid(self, provider: str, provider_uid: str) -> AuthIdentity | None:
+        stmt = (
+            select(AuthIdentity)
+            .where(
+                AuthIdentity.provider == provider,
+                AuthIdentity.provider_uid == provider_uid,
+            )
+            .limit(1)
+        )
+        result = await self.db.execute(stmt)
+        return result.scalar_one_or_none()
+
+    async def get_by_id(self, identity_id: int) -> AuthIdentity | None:
+        stmt = select(AuthIdentity).where(AuthIdentity.id == identity_id)
+        result = await self.db.execute(stmt)
+        return result.scalar_one_or_none()
